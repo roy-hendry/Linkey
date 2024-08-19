@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { page } from "$app/stores";
 	import { fly, fade } from "svelte/transition";
 </script>
