@@ -30,7 +30,32 @@
 		}, 500);
 	}
 
-	async function confirmUsername() {}
+	async function confirmUsername() {
+		console.log("Confirming username", username);
+
+		// As we are making writes to two different documents, we need to use a batch write
+		// This ensures that both writes are successful, or none of them are
+		const batch = writeBatch(db);
+		batch.set(doc(db, "usernames", username), { uid: $user?.uid });
+		batch.set(doc(db, "users", $user!.uid), {
+			username,
+			photoURL: $user?.photoURL ?? null,
+			published: true,
+			bio: "I am the Walrus",
+			links: [
+				{
+					title: "Test Link",
+					url: "https://kung.foo",
+					icon: "custom",
+				},
+			],
+		});
+
+		await batch.commit();
+
+		username = "";
+		isAvailable = false;
+	}
 </script>
 
 <AuthCheck>
