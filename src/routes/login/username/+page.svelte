@@ -6,7 +6,6 @@
 	let username = "";
 	let loading = false;
 	let isAvailable = false;
-
 	let debountTimer: NodeJS.Timeout;
 
 	async function checkAvailability() {
@@ -56,6 +55,14 @@
 		username = "";
 		isAvailable = false;
 	}
+
+	const re = /^(?=[a-zA-Z0-9._]{3,16}$)(?!.*[_.]{2})[^_.].*[^_.]$/;
+
+	// Validation checks via Svelte's reactive statements
+	$: isValid =
+		username?.length > 2 && username.length < 16 && re.test(username);
+	$: isTouched = username.length > 0;
+	$: isTaken = isValid && !isAvailable && !loading;
 </script>
 
 <AuthCheck>
@@ -68,9 +75,35 @@
 			class="input w-full"
 			bind:value={username}
 			on:input={checkAvailability}
+			class:input-error={!isValid && isTouched}
+			class:input-warning={isTaken}
+			class:input-success={isAvailable && isValid && !loading}
 		/>
-		<p>{isAvailable ? "Available" : "Not available"}</p>
 
-		<button class="btn btn-success">Confirm username @{username}</button>
+		<div class="my-4 min-h-16 px-8 w-full">
+			{#if loading}
+				<p class="text-secondary">
+					Checking availability of @{username}...
+				</p>
+			{/if}
+
+			{#if !isValid && isTouched}
+				<p class="text-error text-sm">
+					must be 3-16 characters long, alphanumeric only
+				</p>
+			{/if}
+
+			{#if isValid && !isAvailable && !loading}
+				<p class="text-warning text-sm">
+					@{username} is not available
+				</p>
+			{/if}
+
+			{#if isValid && isAvailable && !loading}
+				<button class="btn btn-success"
+					>Confirm username @{username}
+				</button>
+			{/if}
+		</div>
 	</form>
 </AuthCheck>
