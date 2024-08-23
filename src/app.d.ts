@@ -10,4 +10,11 @@ declare global {
 	}
 }
 
-export {};
+interface UserData {
+	username: string;
+	bio: string;
+	photoURL: string;
+	links: any[];
+}
+
+export { UserData };

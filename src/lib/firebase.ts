@@ -3,6 +3,7 @@ import { getFirestore, doc, onSnapshot } from "firebase/firestore";
 import { getAuth, onAuthStateChanged, type User } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { writable, derived, type Readable } from "svelte/store";
+import type { UserData } from "../app";
 
 const firebaseConfig = {
 	apiKey: "AIzaSyDcapYKNVis3qyP6_wl0NIJMzLAehrRcOI",
@@ -48,6 +49,11 @@ function userStore() {
 
 export const user = userStore();
 
+// ~Usage~
+// onSnapshot(doc, (snapshot) = {
+// 	// Handle realtime changes here
+// })
+
 /**
  * @param  {string} path document path or reference
  * @returns a store with strongly typed realtime updates on document data
@@ -72,14 +78,7 @@ export function docStore<T>(path: string) {
 	};
 }
 
-interface UserData {
-	username: string;
-	bio: string;
-	photoURL: string;
-	links: any[];
-}
-
-// We use a derived store to automatically subscribe to both the user's auth state and the Firestore data at the same time
+// This way, we can easily access the user's data anywhere in the application with realtime updates
 /**
  * @param  {Readable<User>} user
  * @returns a store with realtime updates on the user's document data
@@ -88,6 +87,7 @@ export const userData: Readable<UserData | null> = derived(
 	user,
 	($user, set) => {
 		if ($user) {
+			// If the user is logged in, subscribe to their document by using their UID
 			return docStore<UserData>(`users/${$user.uid}`).subscribe(set);
 		} else {
 			set(null);
