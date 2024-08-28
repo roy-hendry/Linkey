@@ -78,14 +78,6 @@ export function docStore<T>(path: string) {
   };
 }
 
-interface UserData {
-  username: string;
-  bio: string;
-  photoURL: string;
-  published: boolean;
-  links: any[];
-}
-
 // This way, we can easily access the user's data anywhere in the application with realtime updates
 /**
  * @param  {Readable<User>} user
