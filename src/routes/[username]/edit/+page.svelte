@@ -30,6 +30,7 @@
 
   let showForm = false;
 
+  // Reactive form validation
   $: urlIsValid = $formData.url.match(/^(ftp|http|https):\/\/[^ "]+$/);
   $: titleIsValid = $formData.title.length < 20 && $formData.title.length > 0;
   $: formIsValid = urlIsValid && titleIsValid;
