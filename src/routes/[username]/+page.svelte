@@ -13,7 +13,7 @@
 <main class="prose text-center mx-auto mt-8">
   <h1 class="text-7xl my-8 text-purple-500">@{data.username}</h1>
   <img
-    src={data.photoURL ?? "/src/lib/user.png"}
+    src={data.photoURL ?? "user.png"}
     alt="photoURL"
     width="256"
     class="mx-auto"
