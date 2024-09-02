@@ -18,7 +18,7 @@ export const load = (async ({ cookies }) => {
     const userData = userDoc.data();
 
     return {
-      bio: userDoc.data?.bio,
+      bio: userData?.bio,
     };
   } catch (e) {
     console.log(e);
