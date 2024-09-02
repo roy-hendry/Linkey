@@ -24,6 +24,7 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
       maxAge: expiresIn,
       httpOnly: true,
       secure: true,
+      // We set the path to / so that the cookie is sent to all routes
       path: "/",
     };
 
