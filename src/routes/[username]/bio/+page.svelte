@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { PageData } from "./$types";
+  import { userData } from "$lib/firebase";
   import { page } from "$app/stores";
   import { enhance } from "$app/forms";
 
@@ -7,6 +8,10 @@
 </script>
 
 <main class="max-w-lg prose text-center mx-auto my-6">
+  <a href="/{$userData?.username}/edit" class="btn btn-primary fixed left-5">
+    Edit page
+  </a>
+
   <p>Current Bio: <span class="text-info">{data.bio}</span></p>
 
   <!-- Using stores to display status code and form errors -->
