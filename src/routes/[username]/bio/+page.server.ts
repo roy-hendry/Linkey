@@ -1,30 +1,26 @@
 import type { PageServerLoad } from "./$types";
 import { adminAuth, adminDB } from "$lib/server/admin";
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 
-export const load = (async ({ cookies }) => {
-  // Get the session cookie
-  const sessionCookie = cookies.get("__session");
+export const load = (async ({ locals, params }) => {
+  // Very easy to access the userId
+  const uid = locals.userId;
 
-  try {
-    // Verify the session cookie
-    // This will hold things like the user's UID, email, etc.
-    const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie!);
-    // Get the user's document from Firestore
-    const userDoc = await adminDB
-      .collection("users")
-      .doc(decodedClaims.uid)
-      .get();
-    const userData = userDoc.data();
-
-    return {
-      bio: userData?.bio,
-    };
-  } catch (e) {
-    console.log(e);
-    // redirect(301, "/login");
-    throw error(401, "Unauthorized request!");
+  if (!uid) {
+    throw redirect(301, "/login");
   }
-}) satisfies PageServerLoad;
 
-// How we access the Firebase Admin SDK
+  // Using that id, we can do authenticated data fetching
+  const userDoc = await adminDB.collection("users").doc(uid).get();
+
+  // Grab the username and bio from the user document
+  const { username, bio } = userDoc.data()!;
+
+  if (params.username !== username) {
+    throw error(401, "That username does not belong to you");
+  }
+
+  return {
+    bio,
+  };
+}) satisfies PageServerLoad;
