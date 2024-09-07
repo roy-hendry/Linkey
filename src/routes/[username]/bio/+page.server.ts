@@ -3,19 +3,15 @@ import { adminAuth, adminDB } from "$lib/server/admin";
 import { error, fail, redirect } from "@sveltejs/kit";
 
 export const load = (async ({ locals, params }) => {
-  // Very easy to access the userId
-  const uid = locals.userId;
-
-  console.log("uid", uid);
+  // Very easy to access the userID
+  const uid = locals.userID;
 
   if (!uid) {
     throw redirect(301, "/login");
   }
 
-  // Using that id, we can do authenticated data fetching
-  const userDoc = await adminDB.collection("users").doc(uid).get();
-
   // Grab the username and bio from the user document
+  const userDoc = await adminDB.collection("users").doc(uid!).get();
   const { username, bio } = userDoc.data()!;
 
   if (params.username !== username) {
@@ -28,9 +24,9 @@ export const load = (async ({ locals, params }) => {
 }) satisfies PageServerLoad;
 
 export const actions = {
-  // As we only have one action we can just use the default export
+  // As we only have one action, we can use the default export
   default: async ({ locals, request, params }) => {
-    const uid = locals.userId;
+    const uid = locals.userID;
 
     const data = await request.formData();
     const bio = data.get("bio");
@@ -44,11 +40,13 @@ export const actions = {
 
     if (bio!.length > 260) {
       // We can use the fail function to return a 400 error with a JSON body
-      // The fail function won't render the error page, it will just pass that data client side
-      throw fail(400, { problem: "Bio must be less than 260 characters" });
+      // The fail function won't render the error page, instead it will just pass the data client side
+      return fail(400, { problem: "Bio must be less than 260 characters" });
     }
 
-    // Update bio field in the user document
-    await userRef.update({ bio });
+    // Update the bio in the user document
+    await userRef.update({
+      bio,
+    });
   },
 } satisfies Actions;

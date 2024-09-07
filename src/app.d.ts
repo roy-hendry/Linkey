@@ -4,7 +4,7 @@ declare global {
   namespace App {
     // interface Error {}
     interface Locals {
-      userId: string | null;
+      userID: string | null;
     }
     // interface PageData {}
     // interface PageState {}
@@ -16,6 +16,7 @@ interface UserData {
   username: string;
   bio: string;
   photoURL: string;
+  published: boolean;
   links: any[];
 }
 

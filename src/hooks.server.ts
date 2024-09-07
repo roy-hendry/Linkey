@@ -10,11 +10,11 @@ export const handle = (async ({ event, resolve }) => {
   try {
     const decodedClaims = await adminAuth.verifySessionCookie(sessionCookie!);
     // However, once we have a decodedId we set it as a value on the event locals object allowing us to access it in any server.ts file
-    event.locals.userId = decodedClaims.uid;
-    console.log("Found user id: ", event.locals.userId);
-  } catch (error) {
+    event.locals.userID = decodedClaims.uid;
+    console.log("found user id", decodedClaims.uid);
+  } catch (e) {
     // If the user is not authenticated we set the userId to null meaning that the user is not logged in
-    event.locals.userId = null;
+    event.locals.userID = null;
     return resolve(event);
   }
 

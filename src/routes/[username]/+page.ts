@@ -4,7 +4,7 @@ import { db } from "$lib/firebase";
 import { error } from "@sveltejs/kit";
 
 // Uses the username to fetch the user's data from Firestore so we can display it in the UI
-export const load = (async ({ params }: { params: any }) => {
+export const load = (async ({ params }) => {
   const collectionRef = collection(db, "users");
 
   // Query Firestore for the user with the username in the URL
@@ -19,11 +19,11 @@ export const load = (async ({ params }: { params: any }) => {
   const data = snapshot.docs[0]?.data();
 
   if (!exists) {
-    return error(404, "User not found");
+    throw error(404, "User not found");
   }
 
   if (!data.published) {
-    return error(403, `The profile of @${data.username} is private`);
+    throw error(403, `The profile of @${data.username} is private`);
   }
 
   return {
