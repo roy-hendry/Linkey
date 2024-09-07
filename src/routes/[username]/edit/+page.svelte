@@ -80,8 +80,7 @@
       Edit your Profile
     </h1>
 
-    // Slot props are user here to pass the item and index to the UserLink
-    component
+    <!-- Slot props are user here to pass the item and index to the UserLink component -->
     <SortableList list={$userData?.links} on:sort={sortList} let:item let:index>
       <div class="group relative">
         <UserLink {...item} />
