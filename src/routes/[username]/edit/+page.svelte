@@ -80,9 +80,18 @@
       Edit your Profile
     </h1>
 
+    <p class="text-xl mt-5 text-center">
+      {$userData?.bio}
+    </p>
+    <div class="flex justify-center">
+      <a href="/{$userData.username}/bio" class="btn btn-primary my-5"
+        >Edit Bio</a
+      >
+    </div>
+
     <!-- Slot props are user here to pass the item and index to the UserLink component -->
     <SortableList list={$userData?.links} on:sort={sortList} let:item let:index>
-      <div class="group relative">
+      <div class="group relative mt-3">
         <UserLink {...item} />
         <button
           on:click={() => deleteLink(item)}
@@ -145,10 +154,15 @@
     {:else}
       <button
         on:click={() => (showForm = true)}
-        class="btn btn-outline btn-info block mx-auto my-4"
+        class="btn btn-outline btn-info block mx-auto my-5"
       >
         Add a Link
       </button>
     {/if}
+    <div class="flex justify-center">
+      <a href="/{$userData.username}" class="btn btn-success my-5"
+        >View your page</a
+      >
+    </div>
   {/if}
 </main>
