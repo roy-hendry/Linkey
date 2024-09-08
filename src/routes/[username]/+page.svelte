@@ -20,11 +20,19 @@
   />
 
   <p class="text-xl my-8">{data.bio ?? "No bio yet..."}</p>
-  <ul class="list-none">
+  <ul class="flex flex-col items-center justify-center h-full">
     {#each data.links as item}
-      <li class="my-2">
+      <li class="w-56 my-2">
         <UserLink {...item} />
       </li>
     {/each}
   </ul>
+
+  <button
+    class="btn bg-purple-500 text-white px-4 py-2 rounded-lg my-8"
+    on:click={() => {
+      navigator.clipboard.writeText(window.location.href);
+    }}
+    >Copy link 📜
+  </button>
 </main>
